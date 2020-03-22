@@ -7,13 +7,17 @@ function getCellElement(row, column) {
     return document.getElementById(cellId);
 }
 
-function swapTiles(row1, col1, row2, col2) {
-    var cell1 = getCellElement(row1, col1);
-    var cell2 = getCellElement(row2, col2);
-
+// Parameters are document elements as returned by getCellElement()
+function swapTileCells(cell1, cell2) {
     var temp = cell1.className;
     cell1.className = cell2.className;
     cell2.className = temp;
+}
+
+function swapTiles(row1, col1, row2, col2) {
+    var cell1 = getCellElement(row1, col1);
+    var cell2 = getCellElement(row2, col2);
+    swapTileCells(cell1, cell2);
 }
 
 function shuffle() {
@@ -30,34 +34,38 @@ function shuffle() {
 }
 
 function clickTile(row, column) {
-    var cell = getCellElement(row, column);
-    var tile = cell.className;
+    var cell1 = getCellElement(row, column);
+    var tile = cell1.className;
     if (tile != "tile8") {
         // Checking if white tile on the right
         if (column < NUM_COLS - 1) {
-            if (getCellElement(row, column + 1).className == "tile8") {
-                swapTiles(row, column, row, column + 1);
+            var cell2 = getCellElement(row, column + 1);
+            if (cell2.className == "tile8") {
+                swapTileCells(cell1, cell2);
                 return;
             }
         }
         // Checking if white tile on the left
         if (column > 0) {
-            if (getCellElement(row, column - 1).className == "tile8") {
-                swapTiles(row, column, row, column - 1);
+            var cell2 = getCellElement(row, column - 1);
+            if (cell2.className == "tile8") {
+                swapTileCells(cell1, cell2);
                 return;
             }
         }
         // Checking if white tile is above
         if (row > 0) {
-            if (getCellElement(row - 1, column).className == "tile8") {
-                swapTiles(row, column, row - 1, column);
+            var cell2 = getCellElement(row - 1, column);
+            if (cell2.className == "tile8") {
+                swapTileCells(cell1, cell2);
                 return;
             }
         }
         // Checking if white tile is below
         if (row < NUM_ROWS - 1) {
-            if (getCellElement(row + 1, column).className == "tile8") {
-                swapTiles(row, column, row + 1, column);
+            var cell2 = getCellElement(row + 1, column);
+            if (cell2.className == "tile8") {
+                swapTileCells(cell1, cell2);
                 return;
             }
         }
