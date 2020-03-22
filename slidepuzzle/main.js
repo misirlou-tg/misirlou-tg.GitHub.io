@@ -1,10 +1,19 @@
 const NUM_ROWS = 3;
 const NUM_COLS = 3;
 
-function swapTiles(cell1, cell2) {
-    var temp = document.getElementById(cell1).className;
-    document.getElementById(cell1).className = document.getElementById(cell2).className;
-    document.getElementById(cell2).className = temp;
+// Returns the document element for the specified cell
+function getCellElement(row, column) {
+    var cellId = "cell" + row + column;
+    return document.getElementById(cellId);
+}
+
+function swapTiles(row1, col1, row2, col2) {
+    var cell1 = getCellElement(row1, col1);
+    var cell2 = getCellElement(row2, col2);
+
+    var temp = cell1.className;
+    cell1.className = cell2.className;
+    cell2.className = temp;
 }
 
 function shuffle() {
@@ -15,40 +24,40 @@ function shuffle() {
             var row2 = Math.floor(Math.random() * NUM_ROWS); // Pick a random row from 0 to NUM_ROWS
             var column2 = Math.floor(Math.random() * NUM_COLS); // Pick a random column from 0 to NUM_COLS
 
-            swapTiles("cell" + row + column, "cell" + row2 + column2); // Swap the look & feel of both cells
+            swapTiles(row, column, row2, column2); // Swap the look & feel of both cells
         }
     }
 }
 
 function clickTile(row, column) {
-    var cell = document.getElementById("cell" + row + column);
+    var cell = getCellElement(row, column);
     var tile = cell.className;
     if (tile != "tile8") {
         // Checking if white tile on the right
         if (column < NUM_COLS - 1) {
-            if (document.getElementById("cell" + row + (column + 1)).className == "tile8") {
-                swapTiles("cell" + row + column, "cell" + row + (column + 1));
+            if (getCellElement(row, column + 1).className == "tile8") {
+                swapTiles(row, column, row, column + 1);
                 return;
             }
         }
         // Checking if white tile on the left
         if (column > 0) {
-            if (document.getElementById("cell" + row + (column - 1)).className == "tile8") {
-                swapTiles("cell" + row + column, "cell" + row + (column - 1));
+            if (getCellElement(row, column - 1).className == "tile8") {
+                swapTiles(row, column, row, column - 1);
                 return;
             }
         }
         // Checking if white tile is above
         if (row > 0) {
-            if (document.getElementById("cell" + (row - 1) + column).className == "tile8") {
-                swapTiles("cell" + row + column, "cell" + (row - 1) + column);
+            if (getCellElement(row - 1, column).className == "tile8") {
+                swapTiles(row, column, row - 1, column);
                 return;
             }
         }
         // Checking if white tile is below
         if (row < NUM_ROWS - 1) {
-            if (document.getElementById("cell" + (row + 1) + column).className == "tile8") {
-                swapTiles("cell" + row + column, "cell" + (row + 1) + column);
+            if (getCellElement(row + 1, column).className == "tile8") {
+                swapTiles(row, column, row + 1, column);
                 return;
             }
         }
