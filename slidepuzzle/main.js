@@ -1,6 +1,7 @@
 const NUM_ROWS = 3;
 const NUM_COLS = 3;
 const EMPTY_TILE_CLASSNAME = "tile" + (NUM_ROWS * NUM_COLS - 1);
+const FINAL_TILE_CLASSNAME = "tile" + (NUM_ROWS * NUM_COLS);
 
 // Returns the document element for the specified cell
 function getCellElement(row, column) {
@@ -24,6 +25,30 @@ function swapTiles(row1, col1, row2, col2) {
     var cell1 = getCellElement(row1, col1);
     var cell2 = getCellElement(row2, col2);
     swapTileCells(cell1, cell2);
+}
+
+function isPuzzleSolved() {
+    for (var row = 0; row < NUM_ROWS; row++) {
+        for (var col = 0; col < NUM_COLS; col++) {
+            if (getCellElement(row, col).className != "tile" + (row * NUM_ROWS + col)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function checkAndMarkPuzzleSolved() {
+    if (!isPuzzleSolved()) {
+        return;
+    }
+    // Replace the empty tile with the "final" tile
+    getCellElement(NUM_ROWS - 1, NUM_COLS - 1).className = FINAL_TILE_CLASSNAME;
+    var element = document.getElementById("puzzleComplete");
+    element.innerText = "Complete!";
+    // Hide the new game button, when the puzzle is in this state shuffle() makes it unsolvable
+    element = document.getElementById("newGameButton");
+    element.style.display = "none";
 }
 
 function shuffle() {
@@ -51,6 +76,7 @@ function clickTile(row, column) {
         var cell2 = getCellElement(row, column + 1);
         if (isTileCellEmpty(cell2)) {
             swapTileCells(cell1, cell2);
+            checkAndMarkPuzzleSolved();
             return;
         }
     }
@@ -59,6 +85,7 @@ function clickTile(row, column) {
         var cell2 = getCellElement(row, column - 1);
         if (isTileCellEmpty(cell2)) {
             swapTileCells(cell1, cell2);
+            checkAndMarkPuzzleSolved();
             return;
         }
     }
@@ -67,6 +94,7 @@ function clickTile(row, column) {
         var cell2 = getCellElement(row - 1, column);
         if (isTileCellEmpty(cell2)) {
             swapTileCells(cell1, cell2);
+            checkAndMarkPuzzleSolved();
             return;
         }
     }
@@ -75,6 +103,7 @@ function clickTile(row, column) {
         var cell2 = getCellElement(row + 1, column);
         if (isTileCellEmpty(cell2)) {
             swapTileCells(cell1, cell2);
+            checkAndMarkPuzzleSolved();
             return;
         }
     }
