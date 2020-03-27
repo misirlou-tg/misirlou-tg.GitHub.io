@@ -24,11 +24,20 @@ function isTileCellEmpty(cell) {
     return cell.className == EMPTY_TILE_CLASSNAME;
 }
 
+// Check if 'possiblyEmptyCell' is empty
+//   if empty move 'cell' to it, check if puzzle is complete, return true
+//   if not empty (not a valid move), return false
 // Parameters are document elements as returned by getCellElement()
-function swapTiles(cell1, cell2) {
-    var temp = cell1.className;
-    cell1.className = cell2.className;
-    cell2.className = temp;
+function moveTileIfValid(cell, possiblyEmptyCell) {
+    if (!isTileCellEmpty(possiblyEmptyCell)) {
+        // Not a valid move
+        return false;
+    }
+    // Move them
+    possiblyEmptyCell.className = cell.className;
+    cell.className = EMPTY_TILE_CLASSNAME;
+    checkAndMarkPuzzleSolved();
+    return true;
 }
 
 function isPuzzleSolved() {
@@ -106,36 +115,28 @@ function clickTile(row, column) {
     // Checking if empty tile on the right
     if (column < NUM_COLS - 1) {
         var cell2 = getCellElement(row, column + 1);
-        if (isTileCellEmpty(cell2)) {
-            swapTiles(cell1, cell2);
-            checkAndMarkPuzzleSolved();
+        if (moveTileIfValid(cell1, cell2)) {
             return;
         }
     }
     // Checking if empty tile on the left
     if (column > 0) {
         var cell2 = getCellElement(row, column - 1);
-        if (isTileCellEmpty(cell2)) {
-            swapTiles(cell1, cell2);
-            checkAndMarkPuzzleSolved();
+        if (moveTileIfValid(cell1, cell2)) {
             return;
         }
     }
     // Checking if empty tile is above
     if (row > 0) {
         var cell2 = getCellElement(row - 1, column);
-        if (isTileCellEmpty(cell2)) {
-            swapTiles(cell1, cell2);
-            checkAndMarkPuzzleSolved();
+        if (moveTileIfValid(cell1, cell2)) {
             return;
         }
     }
     // Checking if empty tile is below
     if (row < NUM_ROWS - 1) {
         var cell2 = getCellElement(row + 1, column);
-        if (isTileCellEmpty(cell2)) {
-            swapTiles(cell1, cell2);
-            checkAndMarkPuzzleSolved();
+        if (moveTileIfValid(cell1, cell2)) {
             return;
         }
     }
