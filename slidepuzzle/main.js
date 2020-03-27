@@ -9,6 +9,10 @@ function setCompletedText(text) {
     element.innerText = text;
 }
 
+function swapStyleSheet(cssFile) {
+    document.getElementById("pagestyle").setAttribute("href", cssFile);
+}
+
 // Returns the document element for the specified cell
 function getCellElement(row, column) {
     var cellId = "cell" + row + column;
