@@ -4,11 +4,12 @@ const EMPTY_TILE_NUMBER = NUM_ROWS * NUM_COLS - 1;
 const EMPTY_TILE_CLASSNAME = "tile" + EMPTY_TILE_NUMBER;
 const FINAL_TILE_CLASSNAME = "tile" + (NUM_ROWS * NUM_COLS);
 
-function setCompletedText(text) {
-    var element = document.getElementById("puzzleComplete");
+function setSolvedText(text) {
+    var element = document.getElementById("puzzleSolved");
     element.innerText = text;
 }
 
+// Switch the style sheet that defines the active puzzle
 function swapStyleSheet(cssFile) {
     document.getElementById("pagestyle").setAttribute("href", cssFile);
 }
@@ -20,26 +21,11 @@ function getCellElement(row, column) {
 }
 
 // Parameter is a document element as returned by getCellElement()
-function isTileCellEmpty(cell) {
+function isCellEmptyTile(cell) {
     return cell.className == EMPTY_TILE_CLASSNAME;
 }
 
-// Check if 'possiblyEmptyCell' is empty
-//   if empty move 'cell' to it, check if puzzle is complete, return true
-//   if not empty (not a valid move), return false
-// Parameters are document elements as returned by getCellElement()
-function moveTileIfValid(cell, possiblyEmptyCell) {
-    if (!isTileCellEmpty(possiblyEmptyCell)) {
-        // Not a valid move
-        return false;
-    }
-    // Move them
-    possiblyEmptyCell.className = cell.className;
-    cell.className = EMPTY_TILE_CLASSNAME;
-    checkAndMarkPuzzleSolved();
-    return true;
-}
-
+// See if the puzzle is solved, checks that each cell has the correct tile class name
 function isPuzzleSolved() {
     for (var row = 0; row < NUM_ROWS; row++) {
         for (var col = 0; col < NUM_COLS; col++) {
@@ -51,13 +37,67 @@ function isPuzzleSolved() {
     return true;
 }
 
+// Helper function to update the display when the puzzle is solved
 function checkAndMarkPuzzleSolved() {
     if (!isPuzzleSolved()) {
         return;
     }
-    // Replace the empty tile with the "final" tile
+    // Replace the last cell (which should now be empty) with the "final" tile
     getCellElement(NUM_ROWS - 1, NUM_COLS - 1).className = FINAL_TILE_CLASSNAME;
-    setCompletedText("Complete!");
+    setSolvedText("Solved!");
+}
+
+// Check if 'possiblyEmptyCell' is empty
+//   if empty move 'cell' to it, check if puzzle is solved, return true
+//   if not empty (not a valid move), return false
+// Parameters are document elements as returned by getCellElement()
+function moveTileIfValid(cell, possiblyEmptyCell) {
+    if (!isCellEmptyTile(possiblyEmptyCell)) {
+        // Not a valid move
+        return false;
+    }
+    // Move them
+    possiblyEmptyCell.className = cell.className;
+    cell.className = EMPTY_TILE_CLASSNAME;
+    checkAndMarkPuzzleSolved();
+    return true;
+}
+
+function clickTile(row, column) {
+    var cell1 = getCellElement(row, column);
+    if (isCellEmptyTile(cell1)) {
+        // Clicked on the empty tile, just return
+        return;
+    }
+
+    // Checking if empty tile on the right
+    if (column < NUM_COLS - 1) {
+        var cell2 = getCellElement(row, column + 1);
+        if (moveTileIfValid(cell1, cell2)) {
+            return;
+        }
+    }
+    // Checking if empty tile on the left
+    if (column > 0) {
+        var cell2 = getCellElement(row, column - 1);
+        if (moveTileIfValid(cell1, cell2)) {
+            return;
+        }
+    }
+    // Checking if empty tile is above
+    if (row > 0) {
+        var cell2 = getCellElement(row - 1, column);
+        if (moveTileIfValid(cell1, cell2)) {
+            return;
+        }
+    }
+    // Checking if empty tile is below
+    if (row < NUM_ROWS - 1) {
+        var cell2 = getCellElement(row + 1, column);
+        if (moveTileIfValid(cell1, cell2)) {
+            return;
+        }
+    }
 }
 
 function makeNewPuzzle() {
@@ -101,43 +141,6 @@ function makeNewPuzzle() {
         }
     }
 
-    // Puzzle is no longer complete
-    setCompletedText("");
-}
-
-function clickTile(row, column) {
-    var cell1 = getCellElement(row, column);
-    if (isTileCellEmpty(cell1)) {
-        // Clicked on the empty tile, just return
-        return;
-    }
-
-    // Checking if empty tile on the right
-    if (column < NUM_COLS - 1) {
-        var cell2 = getCellElement(row, column + 1);
-        if (moveTileIfValid(cell1, cell2)) {
-            return;
-        }
-    }
-    // Checking if empty tile on the left
-    if (column > 0) {
-        var cell2 = getCellElement(row, column - 1);
-        if (moveTileIfValid(cell1, cell2)) {
-            return;
-        }
-    }
-    // Checking if empty tile is above
-    if (row > 0) {
-        var cell2 = getCellElement(row - 1, column);
-        if (moveTileIfValid(cell1, cell2)) {
-            return;
-        }
-    }
-    // Checking if empty tile is below
-    if (row < NUM_ROWS - 1) {
-        var cell2 = getCellElement(row + 1, column);
-        if (moveTileIfValid(cell1, cell2)) {
-            return;
-        }
-    }
+    // Puzzle is no longer solved
+    setSolvedText("");
 }
