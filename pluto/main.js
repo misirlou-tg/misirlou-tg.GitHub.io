@@ -3,6 +3,9 @@ const PLAYLIST_URL = "playlist.json";
 const EPISODES_URL = "episodes.json";
 var playlist = null;
 var episodeMap = null;
+const EPISODE_COUNT = 249;
+const EPISODE_MINUTES = 30;
+const SEQUENCE_MINUTES = EPISODE_COUNT * EPISODE_MINUTES;
 
 function updateListing() {
     if (playlist == null || episodeMap == null) {
@@ -10,14 +13,58 @@ function updateListing() {
     }
 
     var listingHtml = "playlist.Baseline = " + playlist.Baseline;
-    playlist.EpisodeIds.forEach(episodeId => {
-        listingHtml += "<br/>" + episodeId;
-        if (episodeMap.has(episodeId)) {
+
+    var currTime = new Date();
+
+    var sequenceStartTime = getSequenceStartTime(currTime);
+    listingHtml += "<br/>sequenceStartTime = " + sequenceStartTime;
+
+    // Which slot is currently playing in the playlist
+    var slot = getPlaylistSlot(currTime);
+    listingHtml += "<br/>slot = " + slot + "/" + EPISODE_COUNT;
+
+    // Airtime of the current episode
+    var airtime = new Date(sequenceStartTime);
+    airtime.setUTCMinutes(airtime.getUTCMinutes() + (slot * EPISODE_MINUTES));
+    listingHtml += "<br/>airtime = " + airtime;
+    listingHtml += "<br/>";
+
+    // Build output for the episodes to display
+    for (var t = 0; t < 8; t++) {
+        var episodeId = playlist.EpisodeIds[(slot + t) % EPISODE_COUNT];
+        if (!episodeMap.has(episodeId)) {
+            listingHtml += "<br/>" + formatTime(airtime);
+            listingHtml += "<br/>Not available";
+        }
+        else {
             var episode = episodeMap.get(episodeId);
+            listingHtml += "<br/>" + formatTime(airtime);
+            listingHtml += "<br/>" + episodeId + ", " + episode.AirDate;
             listingHtml += "<br/>" + episode.Title;
         }
-    });
+        listingHtml += "<br/>";
+        // Advance to the next airtime
+        airtime.setUTCMinutes(airtime.getUTCMinutes() + EPISODE_MINUTES);
+    }
     document.getElementById("listing").innerHTML = listingHtml;
+}
+
+function formatTime(time) {
+    return time.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+}
+
+function getPlaylistSlot(currTime) {
+    var diffMinutes = (currTime - playlist.Baseline) / 60000;
+    var airingStartMinutes = diffMinutes % (SEQUENCE_MINUTES);
+    return Math.trunc(airingStartMinutes / EPISODE_MINUTES);
+}
+
+function getSequenceStartTime(currTime) {
+    var diffMinutes = (currTime - playlist.Baseline) / 60000;
+    var numSequence = Math.trunc(diffMinutes / (SEQUENCE_MINUTES));
+    var sequenceStartTime = new Date(playlist.Baseline);
+    sequenceStartTime.setUTCMinutes(sequenceStartTime.getUTCMinutes() + (numSequence * SEQUENCE_MINUTES));
+    return sequenceStartTime;
 }
 
 //
