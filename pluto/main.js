@@ -12,37 +12,29 @@ function updateListing() {
         return;
     }
 
-    var listingHtml = "playlist.Baseline = " + playlist.Baseline;
-
     var currTime = new Date();
-
     var sequenceStartTime = getSequenceStartTime(currTime);
-    listingHtml += "<br/>sequenceStartTime = " + sequenceStartTime;
-
     // Which slot is currently playing in the playlist
     var slot = getPlaylistSlot(currTime);
-    listingHtml += "<br/>slot = " + slot + "/" + EPISODE_COUNT;
-
     // Airtime of the current episode
     var airtime = new Date(sequenceStartTime);
     airtime.setUTCMinutes(airtime.getUTCMinutes() + (slot * EPISODE_MINUTES));
-    listingHtml += "<br/>airtime = " + airtime;
-    listingHtml += "<br/>";
 
+    var listingHtml = '';
     // Build output for the episodes to display
     for (var t = 0; t < 8; t++) {
+        listingHtml += '<p></p>'
+        listingHtml += '<div>' + formatTime(airtime) + '</div>'
         var episodeId = playlist.EpisodeIds[(slot + t) % EPISODE_COUNT];
         if (!episodeMap.has(episodeId)) {
-            listingHtml += "<br/>" + formatTime(airtime);
-            listingHtml += "<br/>Not available";
+            listingHtml += '<div>Not available</div>';
         }
         else {
             var episode = episodeMap.get(episodeId);
-            listingHtml += "<br/>" + formatTime(airtime);
-            listingHtml += "<br/>" + episodeId + ", " + episode.AirDate;
-            listingHtml += "<br/>" + episode.Title;
+            listingHtml += '<div><b>' + episode.Title + '</b></div>';
+            listingHtml += '<div>' + episode.Summary + '</div>';
+            listingHtml += '<div style="text-align: end;">' + episodeId + ', Original air date: ' + episode.AirDate + '</div>';
         }
-        listingHtml += "<br/>";
         // Advance to the next airtime
         airtime.setUTCMinutes(airtime.getUTCMinutes() + EPISODE_MINUTES);
     }
