@@ -1,4 +1,8 @@
-document.getElementById("listing").innerHTML = "Loading...";
+function setListingHtml(listingHtml) {
+    document.getElementById("listing").innerHTML = listingHtml;
+}
+setListingHtml("<p/>Loading...");
+
 const PLAYLIST_URL = "playlist.json";
 const EPISODES_URL = "episodes.json";
 var playlist = null;
@@ -38,7 +42,7 @@ function updateListing() {
         // Advance to the next airtime
         airtime.setUTCMinutes(airtime.getUTCMinutes() + EPISODE_MINUTES);
     }
-    document.getElementById("listing").innerHTML = listingHtml;
+    setListingHtml(listingHtml);
 }
 
 function formatTime(time) {
@@ -90,6 +94,10 @@ function initializeEpisodeMap(o) {
 // Startup code, initialize 'playlist' and 'episodeMap', then call updateListing()
 //
 
+if (!window.jQuery) {
+    setListingHtml("<p/>Error loading jQuery");
+}
+
 if (PLAYLIST_URL != "mock") {
     // https://stackoverflow.com/questions/7346563/loading-local-json-file
     // Can also use builtin 'fetch' API https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
@@ -97,7 +105,7 @@ if (PLAYLIST_URL != "mock") {
     $.getJSON(PLAYLIST_URL, o => {
         initializePlaylist(o);
         loadEpisodes();
-    });
+    }).fail(() => { setListingHtml("<p/>Loading playlist.json failed"); });
 } else {
     parseAndInitializePlaylist('{"Baseline": "2022-02-28T12:30:00-06:00","EpisodeIds": ["S1E1","S1E2","S1E3","S1E6","S1E8","S1E4"]}');
     loadEpisodes();
@@ -108,7 +116,7 @@ function loadEpisodes() {
         $.getJSON(EPISODES_URL, o => {
             initializeEpisodeMap(o);
             updateListing();
-        });
+        }).fail(() => { setListingHtml("<p/>Loading episodes.json failed"); });
     } else {
         parseAndInitializeEpisodeMap('[{"Season": 1, "EpisodeNum": 1, "Title": "The New Housekeeper"}, {"Season": 1, "EpisodeNum": 2, "Title": "The Manhunt"}]')
         updateListing();
