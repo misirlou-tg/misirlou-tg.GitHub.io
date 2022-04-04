@@ -5,15 +5,8 @@ name: build-and-deploy
 #      - main
 on: workflow_dispatch
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      # Found these in the automated (working) deployment
-      contents: read
-      #metadata: read - This failed with Unexpected value 'metadata'
-      pages: write
-      # Required for deploy-pages@v1, without this it was failing with an obsure message
-      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -44,10 +37,19 @@ jobs:
           name: github-pages
           path: ./artifact.tar
           if-no-files-found: warn
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
         # Details on this at https://github.com/actions/deploy-pages
       - name: Deploy to GitHub pages
+        id: deployment
         uses: actions/deploy-pages@v1
-        with:
-          # Telemetry was failing also, with this turned off at least it finds the artifacts
-          emit_telemetry: false
-          token: ${{ github.token }}
