@@ -7,10 +7,43 @@ on: workflow_dispatch
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    # Required for deploy-pages@v1, without this it was failing with an obsure message
+    permissions:
+      id-token: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '14'
-      - run: npm install -g minify
-      - run: minify
+      - name: Install minify
+        run: npm install -g minify
+      - name: Check minify version
+        run: minify -v
+      - name: Copy all site contents to _site, exclude .git
+        run: |
+          mkdir ../_site
+          touch ../_site/.git
+          cp -n -ax * ../_site
+          rm ../_site/.git
+          mv ../_site .
+      - name: Minify file pluto/index.html
+        run: minify pluto/index.html > _site/pluto/index.html
+      - name: Minify file pluto/main.js
+        run: minify pluto/main.js > _site/pluto/main.js
+      - name: Archive _site to artifacts.tar
+        run: tar --dereference --hard-dereference --directory _site/ -cvf artifact.tar .
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: github-pages
+          path: ./artifact.tar
+          if-no-files-found: warn
+        # Details on this at https://github.com/actions/deploy-pages
+      - name: Deploy to GitHub pages
+        uses: actions/deploy-pages@v1
+        with:
+          # Telemetry was failing also, with this turned off at least it finds the artifacts
+          emit_telemetry: false
+          token: ${{ github.token }}
