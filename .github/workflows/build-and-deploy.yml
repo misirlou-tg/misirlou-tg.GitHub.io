@@ -7,8 +7,12 @@ on: workflow_dispatch
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    # Required for deploy-pages@v1, without this it was failing with an obsure message
     permissions:
+      # Found these in the automated (working) deployment
+      contents: read
+      #metadata: read - This failed with Unexpected value 'metadata'
+      pages: write
+      # Required for deploy-pages@v1, without this it was failing with an obsure message
       id-token: write
     steps:
       - name: Checkout repository
