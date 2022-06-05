@@ -7,7 +7,7 @@ const PLAYLIST_URL = "playlist.json";
 const EPISODES_URL = "episodes.json";
 var playlist = null;
 var episodeMap = null;
-const EPISODE_COUNT = 249;
+const EPISODE_COUNT = 159;
 const EPISODE_MINUTES = 30;
 const SEQUENCE_MINUTES = EPISODE_COUNT * EPISODE_MINUTES;
 
