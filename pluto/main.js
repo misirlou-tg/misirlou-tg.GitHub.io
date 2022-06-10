@@ -7,9 +7,7 @@ const PLAYLIST_URL = "playlist.json";
 const EPISODES_URL = "episodes.json";
 var playlist = null;
 var episodeMap = null;
-const EPISODE_COUNT = 159;
 const EPISODE_MINUTES = 30;
-const SEQUENCE_MINUTES = EPISODE_COUNT * EPISODE_MINUTES;
 
 function updateListing() {
     if (playlist == null || episodeMap == null) {
@@ -29,7 +27,7 @@ function updateListing() {
     for (var t = 0; t < 8; t++) {
         listingHtml += '<p></p>'
         listingHtml += '<div>' + formatTime(airtime) + '</div>'
-        var episodeId = playlist.EpisodeIds[(slot + t) % EPISODE_COUNT];
+        var episodeId = playlist.EpisodeIds[(slot + t) % playlist.EpisodeCount];
         if (!episodeMap.has(episodeId)) {
             listingHtml += '<div>Not available</div>';
         }
@@ -51,15 +49,15 @@ function formatTime(time) {
 
 function getPlaylistSlot(currTime) {
     var diffMinutes = (currTime - playlist.Baseline) / 60000;
-    var airingStartMinutes = diffMinutes % (SEQUENCE_MINUTES);
+    var airingStartMinutes = diffMinutes % playlist.SequenceMinutes;
     return Math.trunc(airingStartMinutes / EPISODE_MINUTES);
 }
 
 function getSequenceStartTime(currTime) {
     var diffMinutes = (currTime - playlist.Baseline) / 60000;
-    var numSequence = Math.trunc(diffMinutes / (SEQUENCE_MINUTES));
+    var numSequence = Math.trunc(diffMinutes / playlist.SequenceMinutes);
     var sequenceStartTime = new Date(playlist.Baseline);
-    sequenceStartTime.setUTCMinutes(sequenceStartTime.getUTCMinutes() + (numSequence * SEQUENCE_MINUTES));
+    sequenceStartTime.setUTCMinutes(sequenceStartTime.getUTCMinutes() + (numSequence * playlist.SequenceMinutes));
     return sequenceStartTime;
 }
 
@@ -75,6 +73,8 @@ function parseAndInitializePlaylist(jsonText) {
 function initializePlaylist(o) {
     playlist = o;
     playlist.Baseline = new Date(playlist.Baseline);
+    playlist.EpisodeCount = playlist.EpisodeIds.length;
+    playlist.SequenceMinutes = playlist.EpisodeCount * EPISODE_MINUTES;
 }
 
 function parseAndInitializeEpisodeMap(jsonText) {
