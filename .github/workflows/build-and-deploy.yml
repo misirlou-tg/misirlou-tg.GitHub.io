@@ -10,14 +10,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-      - name: Install minify
-        run: npm install -g minify
-      - name: Check minify version
-        run: minify -v
       - name: Copy all site contents to _site, exclude .git
         run: |
           mkdir ../_site
@@ -25,10 +17,22 @@ jobs:
           cp -n -ax * ../_site
           rm ../_site/.git
           mv ../_site .
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install minify@9.1.0
+        run: npm install -g minify@9.1.0
+      - name: Check minify version
+        run: minify -v
+      - name: Install minify-json
+        run: npm install -g minify-json
       - name: Minify file pluto/index.html
         run: minify pluto/index.html > _site/pluto/index.html
       - name: Minify file pluto/main.js
         run: minify pluto/main.js > _site/pluto/main.js
+      - name: Minify all JSON files alredy in _site/pluto/
+        run: minify-json _site/pluto
       - name: Archive _site to artifacts.tar
         run: tar --dereference --hard-dereference --directory _site/ -cvf artifact.tar .
       - name: Upload artifacts
