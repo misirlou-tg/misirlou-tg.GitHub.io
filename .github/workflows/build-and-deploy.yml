@@ -1,16 +1,43 @@
 name: build-and-deploy
+
+#
+# Built this using samples from:
+# https://github.com/actions/starter-workflows/tree/main/pages
+#
+# Found the samples in this blog post:
+# https://github.blog/changelog/2022-07-27-github-pages-custom-github-actions-workflows-beta/
+#
+
 on:
-  # Runs on pushes targeting the default branch
+  # Runs on pushes targeting master
   push:
-    branches: [$default-branch]
+    branches:
+       - master
   # Allows the ability to run this workflow manually from the Actions tab
   workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
+  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
+      # Checkout & setup pages
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      # Build site content in "_site"
       - name: Copy all site contents to _site, exclude .git
         run: |
           mkdir ../_site
@@ -34,22 +61,16 @@ jobs:
         run: minify pluto/main.js > _site/pluto/main.js
       - name: Minify all JSON files already in _site/pluto/
         run: minify-json _site/pluto
-      - name: Archive _site to artifacts.tar
-        run: tar --dereference --hard-dereference --directory _site/ -cvf artifact.tar .
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: github-pages
-          path: ./artifact.tar
-          if-no-files-found: warn
+      # Artifacts for deploy job
+      - name: Upload pages artifacts
+        uses: actions/upload-pages-artifact@v1
+        # Default for this action must be to upload content from "_site"
+        # In other examples it shows using with: path: to override
 
+  # Deploy job
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
