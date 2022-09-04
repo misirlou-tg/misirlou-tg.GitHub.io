@@ -1,9 +1,10 @@
 name: build-and-deploy
-#on:
-#  push:
-#    branches:
-#      - main
-on: workflow_dispatch
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: [$default-branch]
+  # Allows the ability to run this workflow manually from the Actions tab
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,7 +32,7 @@ jobs:
         run: minify pluto/index.html > _site/pluto/index.html
       - name: Minify file pluto/main.js
         run: minify pluto/main.js > _site/pluto/main.js
-      - name: Minify all JSON files alredy in _site/pluto/
+      - name: Minify all JSON files already in _site/pluto/
         run: minify-json _site/pluto
       - name: Archive _site to artifacts.tar
         run: tar --dereference --hard-dereference --directory _site/ -cvf artifact.tar .
