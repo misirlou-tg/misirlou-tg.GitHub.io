@@ -1,9 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
 <head>
     <title>Javascript Slide Puzzle</title>
-    <link id="pagestyle" rel="stylesheet" id="style" type="text/css" href="./ShyGuy.css" />
+    <link id="pagestyle" rel="stylesheet" type="text/css" href="./ShyGuy.css" />
 </head>
 
 <body>
@@ -15,27 +15,28 @@
     <button onclick="swapStyleSheet('flower.css');">Flower</button>
 
     <!-- Sliding Puzzle by 101Computing - www.101computing.net/sliding-puzzle/ -->
-    <center>
-        <div id="table" style="display: table;">
-            <div id="row0" style="display: table-row;">
-                <div id="cell00" class="tile0" onclick="clickTile(0,0);"></div>
-                <div id="cell01" class="tile1" onclick="clickTile(0,1);"></div>
-                <div id="cell02" class="tile2" onclick="clickTile(0,2);"></div>
-            </div>
-            <div id="row1" style="display: table-row;">
-                <div id="cell10" class="tile3" onclick="clickTile(1,0);"></div>
-                <div id="cell11" class="tile4" onclick="clickTile(1,1);"></div>
-                <div id="cell12" class="tile5" onclick="clickTile(1,2);"></div>
-            </div>
-            <div id="row2" style="display: table-row;">
-                <div id="cell20" class="tile6" onclick="clickTile(2,0);"></div>
-                <div id="cell21" class="tile7" onclick="clickTile(2,1);"></div>
-                <div id="cell22" class="tile8" onclick="clickTile(2,2);"></div>
-            </div>
+
+    <!-- Setting margins to "auto" centers the div horizontally -->
+    <div id="table" style="display: table; margin-left: auto; margin-right: auto;">
+        <div id="row0" style="display: table-row;">
+            <div id="cell00" class="tile0" onclick="clickTile(0,0);"></div>
+            <div id="cell01" class="tile1" onclick="clickTile(0,1);"></div>
+            <div id="cell02" class="tile2" onclick="clickTile(0,2);"></div>
         </div>
-        <div id="puzzleSolved"></div>
-        <button id="newGameButton" onclick="makeNewPuzzle();">New Game</button>
-    </center>
+        <div id="row1" style="display: table-row;">
+            <div id="cell10" class="tile3" onclick="clickTile(1,0);"></div>
+            <div id="cell11" class="tile4" onclick="clickTile(1,1);"></div>
+            <div id="cell12" class="tile5" onclick="clickTile(1,2);"></div>
+        </div>
+        <div id="row2" style="display: table-row;">
+            <div id="cell20" class="tile6" onclick="clickTile(2,0);"></div>
+            <div id="cell21" class="tile7" onclick="clickTile(2,1);"></div>
+            <div id="cell22" class="tile8" onclick="clickTile(2,2);"></div>
+        </div>
+    </div>
+    <!-- Centering the text is intuitive, centering the Button is not -->
+    <div id="puzzleSolved" style="text-align: center;"></div>
+    <button id="newGameButton" onclick="makeNewPuzzle();" style="margin: 0 auto; display: block;">New Game</button>
 </body>
 
 </html>
