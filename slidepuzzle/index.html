@@ -4,6 +4,28 @@
 <head>
     <title>Javascript Slide Puzzle</title>
     <link id="pagestyle" rel="stylesheet" type="text/css" href="./ShyGuy.css" />
+    <style>
+        /* Setting margins to "auto" centers the div horizontally */
+        div.center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .table {
+            display: table;
+        }
+        .table-row {
+            display: table-row;
+        }
+        /* Centering a div with text only does nothing, this will do it (can also apply to a 'p' element) */
+        .text-center {
+            text-align: center;
+        }
+        /* Centering a button is very different */
+        button.center {
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,27 +38,25 @@
 
     <!-- Sliding Puzzle by 101Computing - www.101computing.net/sliding-puzzle/ -->
 
-    <!-- Setting margins to "auto" centers the div horizontally -->
-    <div id="table" style="display: table; margin-left: auto; margin-right: auto;">
-        <div id="row0" style="display: table-row;">
+    <div id="table" class="table center">
+        <div id="row0" class="table-row">
             <div id="cell00" class="tile0" onclick="clickTile(0,0);"></div>
             <div id="cell01" class="tile1" onclick="clickTile(0,1);"></div>
             <div id="cell02" class="tile2" onclick="clickTile(0,2);"></div>
         </div>
-        <div id="row1" style="display: table-row;">
+        <div id="row1" class="table-row">
             <div id="cell10" class="tile3" onclick="clickTile(1,0);"></div>
             <div id="cell11" class="tile4" onclick="clickTile(1,1);"></div>
             <div id="cell12" class="tile5" onclick="clickTile(1,2);"></div>
         </div>
-        <div id="row2" style="display: table-row;">
+        <div id="row2" class="table-row">
             <div id="cell20" class="tile6" onclick="clickTile(2,0);"></div>
             <div id="cell21" class="tile7" onclick="clickTile(2,1);"></div>
             <div id="cell22" class="tile8" onclick="clickTile(2,2);"></div>
         </div>
     </div>
-    <!-- Centering the text is intuitive, centering the Button is not -->
-    <div id="puzzleSolved" style="text-align: center;"></div>
-    <button id="newGameButton" onclick="makeNewPuzzle();" style="margin: 0 auto; display: block;">New Game</button>
+    <div id="puzzleSolved" class="text-center"></div>
+    <button id="newGameButton" class="center" onclick="makeNewPuzzle();">New Game</button>
 </body>
 
 </html>

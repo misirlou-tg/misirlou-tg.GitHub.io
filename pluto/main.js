@@ -35,7 +35,7 @@ function updateListing() {
             var episode = episodeMap.get(episodeId);
             listingHtml += '<div><b>' + episode.Title + '</b></div>';
             listingHtml += '<div>' + episode.Summary + '</div>';
-            listingHtml += '<div style="text-align: end;">' + episodeId + ', Original air date: ' + episode.AirDate + '</div>';
+            listingHtml += '<div class="text-right">' + episodeId + ', Original air date: ' + episode.AirDate + '</div>';
         }
         // Advance to the next airtime
         airtime.setUTCMinutes(airtime.getUTCMinutes() + EPISODE_MINUTES);
