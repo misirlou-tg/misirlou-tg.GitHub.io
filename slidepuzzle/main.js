@@ -1,8 +1,10 @@
 const NUM_ROWS = 3;
 const NUM_COLS = 3;
-const EMPTY_TILE_NUMBER = NUM_ROWS * NUM_COLS - 1;
+const EMPTY_TILE_NUMBER = NUM_ROWS * NUM_COLS;
 const EMPTY_TILE_CLASSNAME = "tile" + EMPTY_TILE_NUMBER;
-const FINAL_TILE_CLASSNAME = "tile" + (NUM_ROWS * NUM_COLS);
+
+// When the puzzle is "scrambled", this will keep track of which cell was initially empty
+var initialEmptyCellIndex = -1;
 
 function setSolvedText(text) {
     var element = document.getElementById("puzzleSolved");
@@ -25,11 +27,18 @@ function isCellEmptyTile(cell) {
     return cell.className == EMPTY_TILE_CLASSNAME;
 }
 
+// Parameter is the (integer) tile number
+function makeTileClassName(tileNum) {
+    return "tile" + tileNum;
+}
+
 // See if the puzzle is solved, checks that each cell has the correct tile class name
 function isPuzzleSolved() {
     for (var row = 0; row < NUM_ROWS; row++) {
         for (var col = 0; col < NUM_COLS; col++) {
-            if (getCellElement(row, col).className != "tile" + (row * NUM_COLS + col)) {
+            var cell = getCellElement(row, col);
+            // Cell is solved if it is the empty tile OR it is the expected tile
+            if (!isCellEmptyTile(cell) && cell.className != makeTileClassName(row * NUM_COLS + col)) {
                 return false;
             }
         }
@@ -42,8 +51,10 @@ function checkAndMarkPuzzleSolved() {
     if (!isPuzzleSolved()) {
         return;
     }
-    // Replace the last cell (which should now be empty) with the "final" tile
-    getCellElement(NUM_ROWS - 1, NUM_COLS - 1).className = FINAL_TILE_CLASSNAME;
+    // Replace the initial empty cell with its tile
+    var row = Math.floor(initialEmptyCellIndex / NUM_COLS);
+    var col = initialEmptyCellIndex % NUM_COLS;
+    getCellElement(row, col).className = makeTileClassName(initialEmptyCellIndex);
     setSolvedText("Solved!");
 }
 
@@ -100,14 +111,24 @@ function clickTile(row, column) {
     }
 }
 
+// Make an array of length n, initialized to 0..n-1
+function makeSequentialArray(n) {
+    var val = 0;
+    return Array.from({ length: n }, () => val++);
+}
+
 function makeNewPuzzle() {
-    // Starting condition of the puzzle, cells 0..8 contain tiles 0..8
-    // Cell index: upper left = 0, lower right = 8
-    var tileNums = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-    // Which cell contains the empty tile initially
-    var emptyCell = 8;
-    // Cells that are adjacent to any cell, i.e. cells 1 & 3 are adjacent to cell 0
-    // Adjacent cells can be swapped with the empty cell to make a valid move
+    // Starting condition of the puzzle, contains tiles 0..n
+    // Indexed by cells: upper left = 0, lower right = n-1
+    var tileNums = makeSequentialArray(NUM_ROWS * NUM_COLS);
+
+    // Which cell index contains the empty tile initially
+    initialEmptyCellIndex = NUM_ROWS * NUM_COLS - 1; // Lower right (last cell)
+    var emptyCellIndex = initialEmptyCellIndex;
+    tileNums[emptyCellIndex] = EMPTY_TILE_NUMBER;
+
+    // Cell indexs that are adjacent to any cell, i.e. cell indexs 1 & 3 are adjacent to cell index 0
+    // Adjacent cell indexs can be swapped with the empty cell index to make a valid move
     var adjacentCells =
         [
             [1, 3], // 0
@@ -121,23 +142,24 @@ function makeNewPuzzle() {
             [5, 7] // 8
         ];
 
+    // Scramble the puzzle by randomly moving the cell with the empty tile to an adjacent cell 300 times
     for (var t = 0; t < 300; t++) {
-        // First pick a cell to move the empty cell to
-        var adjacentRow = adjacentCells[emptyCell];
+        // First pick an adjacent cell index to move the empty tile to
+        var adjacentRow = adjacentCells[emptyCellIndex];
         var random = Math.floor(Math.random() * adjacentRow.length);
-        var cellToMove = adjacentRow[random];
+        var cellIndexToMove = adjacentRow[random];
 
-        // Move the tile # in cellToMove to emptyCell
-        tileNums[emptyCell] = tileNums[cellToMove];
-        // Make cellToMove the empty tile #
-        tileNums[cellToMove] = EMPTY_TILE_NUMBER;
-        emptyCell = cellToMove;
+        // Move the tile # in cellIndexToMove to emptyCellIndex
+        tileNums[emptyCellIndex] = tileNums[cellIndexToMove];
+        // Make cellIndexToMove the empty tile #
+        tileNums[cellIndexToMove] = EMPTY_TILE_NUMBER;
+        emptyCellIndex = cellIndexToMove;
     }
 
     // Set all of the cells to the tile #s we just randomly moved
     for (var row = 0; row < NUM_ROWS; row++) {
         for (var col = 0; col < NUM_COLS; col++) {
-            getCellElement(row, col).className = "tile" + tileNums[row * NUM_COLS + col];
+            getCellElement(row, col).className = makeTileClassName(tileNums[row * NUM_COLS + col]);
         }
     }
 
