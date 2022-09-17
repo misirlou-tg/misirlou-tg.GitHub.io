@@ -3,24 +3,13 @@
 
 <head>
     <title>Pluto TV Listing for TAGS</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
-        div.center {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .text-right {
-            text-align: right;
-        }
-        .update-button {
-            font-size: 16pt;
-            border: none;
-            outline: 0;
-            width: 100%;
-            padding: 6pt;
-            color: white;
-            background-color: black;
-            text-align: center;
-            cursor: pointer;
+        /* I liked this "ccc" grey which is a medium grey */
+        .w3-ccc-grey,
+        .w3-hover-ccc-grey:hover {
+            color: #000 !important;
+            background-color: #ccc !important;
         }
     </style>
 </head>
@@ -28,20 +17,24 @@
 <body>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <div id="content" class="center" style="width: 90%;">
-        <button onclick="updateListing();" class="update-button">Update</button>
-        <div id="listing">
-            <!--p></p>
-            <div>2:30 PM</div>
-            <div><b>The New Housekeeper</b></div>
-            <div>Sheriff Andy Taylor invites Aunt Bee to stay and help raise his 6-year-old son Opie when his housekeeper, Rose, leaves to get married. Opie objects to the change.</div>
-            <div class="text-right">S1E1, 3 Oct. 1960</div>
-            <p></p>
-            <div>3:00 PM</div>
-            <div><b>The Manhunt</b></div>
-            <div>A state police captain errs in not utilizing Sheriff Taylor's intimate knowledge of the area and its people when issuing a dragnet for an escaped criminal.</div>
-            <div class="text-right">S1E2, 10 Oct. 1960</div-->
-        </div>
+    <div class="w3-container">
+        <button onclick="updateListing();" class="w3-button w3-block w3-black">Update</button>
+        <ul id="listing" class="w3-ul w3-border">
+            <!--li class="w3-hover-ccc-grey">
+                <div>2:30 PM</div>
+                <div class="w3-large">The New Housekeeper</div>
+                <div>Sheriff Andy Taylor invites Aunt Bee to stay and help raise his 6-year-old son Opie when his
+                    housekeeper, Rose, leaves to get married. Opie objects to the change.</div>
+                <div class="w3-right-align">S1E1, 3 Oct. 1960</div>
+            </li>
+            <li class="w3-hover-ccc-grey">
+                <div>3:00 PM</div>
+                <div class="w3-large">The Manhunt</div>
+                <div>A state police captain errs in not utilizing Sheriff Taylor's intimate knowledge of the area and
+                    its people when issuing a dragnet for an escaped criminal.</div>
+                <div class="w3-right-align">S1E2, 10 Oct. 1960</div>
+            </li-->
+        </ul>
     </div>
     <script type="text/javascript" src="./main.js"></script>
 </body>

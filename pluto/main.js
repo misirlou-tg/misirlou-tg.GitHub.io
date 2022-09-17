@@ -25,18 +25,19 @@ function updateListing() {
     var listingHtml = '';
     // Build output for the episodes to display
     for (var t = 0; t < 8; t++) {
-        listingHtml += '<p></p>'
+        listingHtml += '<li class="w3-hover-ccc-grey">'
         listingHtml += '<div>' + formatTime(airtime) + '</div>'
         var episodeId = playlist.EpisodeIds[(slot + t) % playlist.EpisodeCount];
         if (!episodeMap.has(episodeId)) {
-            listingHtml += '<div>Not available</div>';
+            listingHtml += '<div class="w3-large">Not available</div>';
         }
         else {
             var episode = episodeMap.get(episodeId);
-            listingHtml += '<div><b>' + episode.Title + '</b></div>';
+            listingHtml += '<div class="w3-large">' + episode.Title + '</div>';
             listingHtml += '<div>' + episode.Summary + '</div>';
-            listingHtml += '<div class="text-right">' + episodeId + ', Original air date: ' + episode.AirDate + '</div>';
+            listingHtml += '<div class="w3-right-align">' + episodeId + ', Original air date: ' + episode.AirDate + '</div>';
         }
+        listingHtml += '</li>';
         // Advance to the next airtime
         airtime.setUTCMinutes(airtime.getUTCMinutes() + EPISODE_MINUTES);
     }
