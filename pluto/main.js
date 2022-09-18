@@ -2,7 +2,7 @@ function setListingHtml(listingHtml) {
     document.getElementById("listing").innerHTML = listingHtml;
 }
 function setErrorMessage(message) {
-    setListingHtml('<li class="w3-xlarge">' + message + '</li>');
+    setListingHtml('<p class="w3-xlarge">' + message + '</p>');
 }
 setErrorMessage("Loading...");
 
@@ -28,23 +28,34 @@ function updateListing() {
     var listingHtml = '';
     // Build output for the episodes to display
     for (var t = 0; t < 8; t++) {
-        listingHtml += '<li class="w3-hover-ccc-grey">'
-        listingHtml += '<div>' + formatTime(airtime) + '</div>'
+        listingHtml += '<div class="w3-card-2">';
+        listingHtml += '<header class="w3-container w3-blue">';
+        listingHtml += '<p>' + formatTime(airtime) + ' ';
         var episodeId = playlist.EpisodeIds[(slot + t) % playlist.EpisodeCount];
         if (!episodeMap.has(episodeId)) {
-            listingHtml += '<div class="w3-large">Not available</div>';
+            listingHtml += 'Not Available</p>';
+            listingHtml += '</header>';
+            listingHtml += '<div class="w3-container">';
+            listingHtml += '<p>Not Available</p>';
+            listingHtml += '</div>';
         }
         else {
             var episode = episodeMap.get(episodeId);
-            listingHtml += '<div class="w3-large">' + episode.Title + '</div>';
-            listingHtml += '<div>' + episode.Summary + '</div>';
+            listingHtml += '<span class="w3-large">' + episode.Title + '</span></p>';
+            listingHtml += '</header>';
+            listingHtml += '<div class="w3-container">';
+            listingHtml += '<p>' + episode.Summary + '</p>';
             listingHtml += '<div class="w3-right-align">' + episodeId + ', Original air date: ' + episode.AirDate + '</div>';
+            listingHtml += '</div>';
         }
-        listingHtml += '</li>';
+        listingHtml += '</div>';
         // Advance to the next airtime
         airtime.setUTCMinutes(airtime.getUTCMinutes() + EPISODE_MINUTES);
     }
     setListingHtml(listingHtml);
+    // Update the button text, this will force Chrome to "reformat" the button
+    // (saw in some cases of the initial load of the page that it would be
+    //  displayed with the wrong size text or button height)
     document.getElementById("updateBtn").innerText = "Update";
 }
 

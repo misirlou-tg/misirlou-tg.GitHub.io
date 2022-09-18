@@ -10,11 +10,9 @@
             -webkit-text-size-adjust: unset;
         }
 
-        /* I liked this "ccc" grey which is a medium grey */
-        .w3-ccc-grey,
-        .w3-hover-ccc-grey:hover {
-            color: #000 !important;
-            background-color: #ccc !important;
+        /* Add some space around the cards in the listing */
+        .w3-card-2 {
+            margin-top: 12pt;
         }
     </style>
 </head>
@@ -24,23 +22,30 @@
 
     <div class="w3-container">
         <a id="updateBtn" onclick="updateListing();" class="w3-block w3-padding-16 w3-center w3-black w3-ripple" style="cursor: default;">Loading...</a>
-        <ul id="listing" class="w3-ul w3-border">
-            <!--li class="w3-hover-ccc-grey">
-                <div>2:30 PM</div>
-                <div class="w3-large">The New Housekeeper</div>
-                <div>Sheriff Andy Taylor invites Aunt Bee to stay and help raise his 6-year-old son Opie when his
-                    housekeeper, Rose, leaves to get married. Opie objects to the change.</div>
-                <div class="w3-right-align">S1E1, 3 Oct. 1960</div>
-            </li>
-            <li class="w3-hover-ccc-grey">
-                <div>3:00 PM</div>
-                <div class="w3-large">The Manhunt</div>
-                <div>A state police captain errs in not utilizing Sheriff Taylor's intimate knowledge of the area and
-                    its people when issuing a dragnet for an escaped criminal.</div>
-                <div class="w3-right-align">S1E2, 10 Oct. 1960</div>
-            </li-->
-        </ul>
+        <div id="listing">
+            <!--div class="w3-card-2">
+                <header class="w3-container w3-blue">
+                    <p>2:30 PM <span class="w3-large">The New Housekeeper</span></p>
+                </header>
+                <div class="w3-container">
+                    <p>Sheriff Andy Taylor invites Aunt Bee to stay and help raise his 6-year-old son Opie when his
+                        housekeeper, Rose, leaves to get married. Opie objects to the change.</p>
+                    <div class="w3-right-align">S1E1, 3 Oct. 1960</div>
+                </div>
+            </div>
+            <div class="w3-card-2">
+                <header class="w3-container w3-blue">
+                    <p>3:00 PM <span class="w3-large">The Manhunt</span></p>
+                </header>
+                <div class="w3-container">
+                    <p>A state police captain errs in not utilizing Sheriff Taylor's intimate knowledge of the area and
+                        its people when issuing a dragnet for an escaped criminal.</p>
+                    <div class="w3-right-align">S1E2, 10 Oct. 1960</div>
+                </div>
+            </div-->
+        </div>
     </div>
+    <p></p>
     <script type="text/javascript" src="./main.js"></script>
 </body>
 
