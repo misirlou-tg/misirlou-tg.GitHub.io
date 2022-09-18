@@ -1,7 +1,10 @@
 function setListingHtml(listingHtml) {
     document.getElementById("listing").innerHTML = listingHtml;
 }
-setListingHtml("<p/>Loading...");
+function setErrorMessage(message) {
+    setListingHtml('<li class="w3-xlarge">' + message + '</li>');
+}
+setErrorMessage("Loading...");
 
 const PLAYLIST_URL = "playlist.json";
 const EPISODES_URL = "episodes.json";
@@ -42,6 +45,7 @@ function updateListing() {
         airtime.setUTCMinutes(airtime.getUTCMinutes() + EPISODE_MINUTES);
     }
     setListingHtml(listingHtml);
+    document.getElementById("updateBtn").innerText = "Update";
 }
 
 function formatTime(time) {
@@ -96,7 +100,7 @@ function initializeEpisodeMap(o) {
 //
 
 if (!window.jQuery) {
-    setListingHtml("<p/>Error loading jQuery");
+    setErrorMessage("Error loading jQuery");
 }
 
 if (PLAYLIST_URL != "mock") {
@@ -106,7 +110,7 @@ if (PLAYLIST_URL != "mock") {
     $.getJSON(PLAYLIST_URL, o => {
         initializePlaylist(o);
         loadEpisodes();
-    }).fail(() => { setListingHtml("<p/>Loading playlist.json failed"); });
+    }).fail(() => { setErrorMessage("Loading playlist.json failed"); });
 } else {
     parseAndInitializePlaylist('{"Baseline": "2022-02-28T12:30:00-06:00","EpisodeIds": ["S1E1","S1E2","S1E3","S1E6","S1E8","S1E4"]}');
     loadEpisodes();
@@ -117,7 +121,7 @@ function loadEpisodes() {
         $.getJSON(EPISODES_URL, o => {
             initializeEpisodeMap(o);
             updateListing();
-        }).fail(() => { setListingHtml("<p/>Loading episodes.json failed"); });
+        }).fail(() => { setErrorMessage("Loading episodes.json failed"); });
     } else {
         parseAndInitializeEpisodeMap('[{"Season": 1, "EpisodeNum": 1, "Title": "The New Housekeeper"}, {"Season": 1, "EpisodeNum": 2, "Title": "The Manhunt"}]')
         updateListing();
