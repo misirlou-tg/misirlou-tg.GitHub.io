@@ -28,8 +28,8 @@ function updateListing() {
     var listingHtml = '';
     // Build output for the episodes to display
     for (var t = 0; t < 8; t++) {
-        listingHtml += '<div class="w3-card-2">';
-        listingHtml += '<header class="w3-container w3-blue">';
+        listingHtml += '<div class="w3-card-2 w3-round-large">';
+        listingHtml += '<header class="w3-container round-top-only w3-blue">';
         listingHtml += '<p>' + formatTime(airtime) + ' ';
         var episodeId = playlist.EpisodeIds[(slot + t) % playlist.EpisodeCount];
         if (!episodeMap.has(episodeId)) {
