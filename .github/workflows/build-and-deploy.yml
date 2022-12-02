@@ -51,17 +51,27 @@ jobs:
           node-version: '16'
       - name: Install minify@9.1.0
         run: npm install -g minify@9.1.0
-      - name: Check minify version
-        run: minify -v
       - name: Install minify-json
         run: npm install -g minify-json
-      # Minify html & js files in pluto/ and slidepuzzle/
-      - name: Minify html & js files in pluto/ and slidepuzzle/
+      # Use this instead of minify for Javascript, it will rename top-level functions & constants
+      # (not installing with -g since it adds a script with the same name as minify)
+      - name: Install babel-minify@0.5.2
+        run: npm install babel-minify@0.5.2 --save-dev
+      # Minify html & css files in pluto/ and slidepuzzle/
+      - name: Minify html & css files in pluto/ and slidepuzzle/
         run: |
-          for f in pluto/*.html pluto/*.js slidepuzzle/*.html slidepuzzle/*.js
+          for f in pluto/*.html pluto/*.css slidepuzzle/*.html slidepuzzle/*.css
           do
             echo "minify $f to _site"
             minify $f > _site/$f
+          done
+      # Minify js files in pluto/ and slidepuzzle/
+      - name: Minify js files in pluto/ and slidepuzzle/
+        run: |
+          for f in pluto/*.js slidepuzzle/*.js
+          do
+            echo "minify $f to _site"
+            node_modules/.bin/minify $f --out-file _site/$f --mangle.topLevel
           done
       # Minify pluto/*.json
       - name: Minify all JSON files already in _site/pluto/
@@ -80,7 +90,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-        # Details on this at https://github.com/actions/deploy-pages
+      # Details on this at https://github.com/actions/deploy-pages
       - name: Deploy to GitHub pages
         id: deployment
         uses: actions/deploy-pages@v1
