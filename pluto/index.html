@@ -2,14 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 
 <head>
+    <meta name="viewport" content="width=device-width">
     <title>Pluto TV Listing for TAGS</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
-        /* Found that when this was set for Chrome on Android text was very small when device is in Portrait orientation */
-        html {
-            -webkit-text-size-adjust: unset;
-        }
-
         /* Add some space around the cards in the listing */
         .w3-card-2 {
             margin-top: 12pt;
@@ -31,7 +27,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <div class="w3-container">
-        <a id="updateBtn" onclick="updateListing();" class="w3-btn w3-black footer-right">Loading...</a>
+        <a id="updateBtn" onclick="updateListing();" class="w3-btn w3-black footer-right">Update</a>
         <div id="listing">
             <!--div class="w3-card-2 w3-round-large">
                 <header class="w3-container round-top-only w3-blue">

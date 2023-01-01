@@ -53,10 +53,6 @@ function updateListing() {
         airtime.setUTCMinutes(airtime.getUTCMinutes() + EPISODE_MINUTES);
     }
     setListingHtml(listingHtml);
-    // Update the button text, this will force Chrome to "reformat" the button
-    // (saw in some cases of the initial load of the page that it would be
-    //  displayed with the wrong size text or button height)
-    document.getElementById("updateBtn").innerText = "Update";
 }
 
 function formatTime(time) {
