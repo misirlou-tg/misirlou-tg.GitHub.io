@@ -38,6 +38,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v2
       # Build site content in "_site"
+      # Do this before installing npm utilities, etc, so we don't get any extra files
       - name: Copy all site contents to _site, exclude .git
         run: |
           mkdir ../_site
@@ -45,6 +46,7 @@ jobs:
           cp -n -ax * ../_site
           rm ../_site/.git
           mv ../_site .
+      # Install npm utilities
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -55,10 +57,10 @@ jobs:
         run: minify -v
       - name: Install minify-json
         run: npm install -g minify-json
-      # Minify html & js files in pluto/ and slidepuzzle/
-      - name: Minify html & js files in pluto/ and slidepuzzle/
+      # Minify html, css & js files in pluto/ and slidepuzzle/
+      - name: Minify html, css & js files in pluto/ and slidepuzzle/
         run: |
-          for f in pluto/*.html pluto/*.js slidepuzzle/*.html slidepuzzle/*.js
+          for f in pluto/*.html pluto/*.js slidepuzzle/*.html slidepuzzle/*.css slidepuzzle/*.js
           do
             echo "minify $f to _site"
             minify $f > _site/$f
