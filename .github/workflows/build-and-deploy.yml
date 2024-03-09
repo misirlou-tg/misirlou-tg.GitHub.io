@@ -34,9 +34,9 @@ jobs:
     steps:
       # Checkout & setup pages
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v4
       # Build site content in "_site"
       # Do this before installing npm utilities, etc, so we don't get any extra files
       - name: Copy all site contents to _site, exclude .git
@@ -48,13 +48,11 @@ jobs:
           mv ../_site .
       # Install npm utilities
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
       - name: Install minify@9.1.0
         run: npm install -g minify@9.1.0
-      - name: Check minify version
-        run: minify -v
       - name: Install minify-json
         run: npm install -g minify-json
       # Minify html, css & js files in pluto/ and slidepuzzle/
@@ -70,7 +68,7 @@ jobs:
         run: minify-json _site/pluto
       # Artifacts for deploy job
       - name: Upload pages artifacts
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         # Default for this action must be to upload content from "_site"
         # In other examples it shows using with: path: to override
 
@@ -82,7 +80,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-        # Details on this at https://github.com/actions/deploy-pages
+      # Details on this at https://github.com/actions/deploy-pages
       - name: Deploy to GitHub pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
