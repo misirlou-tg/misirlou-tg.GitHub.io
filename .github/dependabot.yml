@@ -1,0 +1,8 @@
+version: 2
+
+updates:
+  # Setup schedule to check GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
