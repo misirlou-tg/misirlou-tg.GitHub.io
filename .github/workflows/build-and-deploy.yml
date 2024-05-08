@@ -36,7 +36,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
       # Build site content in "_site"
       # Do this before installing npm utilities, etc, so we don't get any extra files
       - name: Copy all site contents to _site, exclude .git
