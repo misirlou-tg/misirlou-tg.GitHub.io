@@ -39,12 +39,14 @@ jobs:
         uses: actions/configure-pages@v5
       # Build site content in "_site"
       # Do this before installing npm utilities, etc, so we don't get any extra files
-      - name: Copy all site contents to _site, exclude .git
+      - name: Copy all site contents to _site, exclude .git & .github
         run: |
           mkdir ../_site
           touch ../_site/.git
+          touch ../_site/.github
           cp -n -ax * ../_site
           rm ../_site/.git
+          rm ../_site/.github
           mv ../_site .
       # Install npm utilities
       - name: Setup Node.js
