@@ -13,6 +13,8 @@ on:
   push:
     branches:
       - master
+  # Pull requests
+  pull_request:
   # Allows the ability to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -78,6 +80,8 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # Do not deploy when invoked for PR
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
