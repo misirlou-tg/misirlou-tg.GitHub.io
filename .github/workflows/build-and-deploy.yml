@@ -73,7 +73,7 @@ jobs:
         run: minify-json _site/pluto
       # Artifacts for deploy job
       - name: 📤 Upload pages artifacts
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         # Default for this action must be to upload content from "_site"
         # In other examples it shows using with: path: to override
 
