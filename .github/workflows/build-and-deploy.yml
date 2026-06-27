@@ -37,7 +37,7 @@ jobs:
     steps:
       # Checkout & setup pages
       - name: 📥 Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: 🛠️ Setup Pages
         uses: actions/configure-pages@v6
       # Build site content in "_site"
