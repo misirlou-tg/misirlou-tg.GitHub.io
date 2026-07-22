@@ -58,8 +58,8 @@ jobs:
           node-version: '20'
       - name: 🛠️ Install minify@9.1.0
         run: npm install -g minify@9.1.0
-      - name: 🛠️ Install minify-json
-        run: npm install -g minify-json
+      - name: 🛠️ Install json-minify
+        run: npm install -g json-minify
       # Minify html, css & js files in pluto/ and slidepuzzle/
       - name: 🧹 Minify html, css & js files in pluto/ and slidepuzzle/
         run: |
@@ -69,8 +69,13 @@ jobs:
             minify $f > _site/$f
           done
       # Minify pluto/*.json
-      - name: 🧹 Minify all JSON files already in _site/pluto/
-        run: minify-json _site/pluto
+      - name: 🧹 Minify json files in pluto/
+        run: |
+          for f in pluto/*.json
+          do
+            echo "json-minify $f to _site"
+            json-minify $f > _site/$f
+          done
       # Artifacts for deploy job
       - name: 📤 Upload pages artifacts
         uses: actions/upload-pages-artifact@v5
